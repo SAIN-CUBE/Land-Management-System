@@ -1,0 +1,25 @@
+<!-- land_management_data.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Land Management Data</title>
+    <!-- Include Folium CSS -->
+    {{ form.media }}
+</head>
+<body>
+    <h2>Add Land Ownership Data</h2>
+    <form method="post" action="{% url 'land_management_data' %}">
+        {% csrf_token %}
+        {{ land_ownership_form.as_p }}
+        {{ owner_form.as_p }}
+        {{ land_form.as_p }}
+        {{ transaction_form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <!-- Render the map content if available -->
+    {% if map %}
+        {{ map|safe }}
+    {% endif %}
+</body>
+</html>
