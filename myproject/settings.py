@@ -9,6 +9,8 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+STATIC_URL = '/static/'
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
