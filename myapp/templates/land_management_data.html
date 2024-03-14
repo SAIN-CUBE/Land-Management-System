@@ -1,516 +1,605 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Land Management Data</title>
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <!-- Include Folium CSS -->
-    {{ form.media }}
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-      :root {
-        --body-color: #e4e9f7;
-        --sidebar-color: #fff;
-        --primary-color: #695cfe;
-        --primary-color-light: #f6f5ff;
-        --toggle-color: #ddd;
-        --text-color: #707070;
+<head>
+  <title>Land Management Data</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <!-- Include Folium CSS -->
+  {{ form.media }}
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-        --tran-02: all 0.2s ease;
-        --tran-03: all 0.3s ease;
-        --tran-04: all 0.4s ease;
-        --tran-05: all 0.5s ease;
-      }
+    :root {
+      --body-color: #e4e9f7;
+      --sidebar-color: #fff;
+      --primary-color: #695cfe;
+      --primary-color-light: #f6f5ff;
+      --toggle-color: #ddd;
+      --text-color: #707070;
 
-      * {
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      --tran-02: all 0.2s ease;
+      --tran-03: all 0.3s ease;
+      --tran-04: all 0.4s ease;
+      --tran-05: all 0.5s ease;
+    }
 
-      body {
-        height: 100vh;
-        background-color: var(--body-color);
-      }
+    * {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      body.dark {
-        --body-color: #18191A;
-        --sidebar-color: #242526;
-        --primary-color: #3a3b3c;
-        --primary-color-light: #f6f5ff;
-        --toggle-color: #ddd;
-        --text-color: #707070;
- 
-      }
+    body {
+      height: 100vh;
+      background-color: var(--body-color);
+    }
 
-      /* Sidebar styles */
-      .sidebar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 100%;
-        background-color: var(--sidebar-color);
-        padding: 10px 14px;
-        z-index: 1;
-        /* overflow-y: auto;
+    body.dark {
+      --body-color: #18191A;
+      --sidebar-color: #242526;
+      --primary-color: #3a3b3c;
+      --primary-color-light: #f6f5ff;
+      --toggle-color: #ddd;
+      --text-color: #707070;
+
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background-color: var(--sidebar-color);
+      padding: 10px 14px;
+      z-index: 1;
+      /* overflow-y: auto;
         color: #fff;
         transition: width 0.5s; */
-        /* z-index: 2; */
-      }
+      /* z-index: 2; */
+    }
 
-      .sidebar.close {
-        width: 78px;
-      }
-
-
-
-      .sidebar .image-text img {
-        width: 50px;
-        border-radius: 6px;
-      }
-
-      .sidebar header .image-text {
-        display: flex;
-        align-items: center;
-      }
-
-      .sidebar .text {
-        font-size: 16px;
-        font-weight: 500;
-      }
-
-      .sidebar .image {
-        min-width: 75px;
-        display: flex;
-        align-items: center;
-        padding-left: 12px;
-      }
-
-      header .image-text .header-text {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .header-text .name {
-        font-weight: 600;
-      }
-
-      .header-text .profession {
-        margin-top: -6px;
-      }
-      .sidebar header {
-        position: relative;
-      }
-
-      .sidebar header .toggle {
-        position: absolute;
-        top: 50%;
-        left: -25px;
-        transform: translateY(-50%);
-        height: 25px;
-        width: 25px;
-        background-color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        color: var(--sidebar-color);
-      }
-
-      .sidebar li {
-        height: 50px;
-        /* background-color: red; */
-        margin-top: 10px;
-        list-style: none;
-        display: flex;
-        align-items: center;
-      }
-
-      .sidebar li .icon {
-        min-width: 40px;
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .sidebar li .icon,
-      .sidebar li .text {
-        color: var(--text-color);
-      }
-
-      .sidebar.close .text {
-        opacity: 0;
-      }
-      .sidebar li a {
-        text-decoration: none;
-        height: 100%;
-        align-items: center;
-        display: flex;
-      }
-
-      .sidebar .search-box {
-        background-color: var(--primary-color-light);
-        margin-right: 10px;
-      }
-
-      .search-box input {
-        height: 100%;
-        width: 100%;
-        background: var(--primary-color-light);
-        outline: none;
-        border: none;
-        border-radius: 10px;
-      }
-
-      .sidebar .text-area {
-        height: 100%;
-        width: 96%;
-        background: var(--primary-color-light);
-        outline: none;
-        border: none;
-        margin-top: 10px;
-        padding: 15px 15px;
-        font-size: 11.5px;
-        font-weight: 400;
-        height: auto;
-  resize: none; /* Disable textarea resizing */
-  overflow: auto; /* Add scrollbar if content exceeds textarea size */
-      }
-
-      .sidebar.close .text-area {
-        display: none;
-      }
-
-      .search-box input::placeholder {
-        font-size: 11.5px;
-        font-weight: 400;
-      }
-
-      .search-box span {
-        font-size: 11.5px;
-        font-weight: 400;
-        opacity: 0.8;
-        width: 60%;
-      }
-
-      .search-box input[type = 'checkbox'] {
-        height: 40%;
-        width: 40%;
-      }
+    .sidebar.close {
+      width: 78px;
+    }
 
 
 
-      .menu-bar {
-        height: 82%;
-        margin-top: 10px;
-        overflow-y: auto;
-      }
+    .sidebar .image-text img {
+      width: 50px;
+      border-radius: 6px;
+    }
 
-      .sidebar.close .menu-bar {
-       overflow: hidden;
-   }
-      .menu-bar .mode {
-        background: var(--primary-color-light);
-      }
+    .sidebar header .image-text {
+      display: flex;
+      align-items: center;
+    }
 
-      .sidebar.close .menu-bar {
-        height: 100%;
-      }
-      .menu-bar .mode .moon-sun {
-        height: 50px;
-        width: 60px;
-        display: flex;
-        align-items: center;
-      }
+    .sidebar .text {
+      font-size: 16px;
+      font-weight: 500;
+    }
 
-      .menu-bar .mode i {
-        position: absolute;
-      }
+    .sidebar .image {
+      min-width: 75px;
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+    }
 
-      
-      .menu-bar .mode i.sun {
-        opacity: 0;
-      }
+    header .image-text .header-text {
+      display: flex;
+      flex-direction: column;
+    }
 
-      .menu-bar .mode .toggle-switch {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        min-width: 60px;
-        cursor: pointer;
-      }
+    .header-text .name {
+      font-weight: 600;
+    }
 
-      .toggle-switch .switch {
-        position: relative;
-        height: 22px;
-        width: 44px;
-        background: var(--toggle-color);
+    .header-text .profession {
+      margin-top: -6px;
+    }
 
-      }
+    .sidebar header {
+      position: relative;
+    }
 
-      .switch::before {
-        content: '';
-        position: absolute;
-        height: 15px;
-        width: 15px;
-        background: var(--sidebar-color);
-        border-radius: 50%;
-        top: 50%;
-        left: 50px;
-        transform: translateY(-50%);
-      }
-      
+    .sidebar header .toggle {
+      position: absolute;
+      top: 50%;
+      left: -25px;
+      transform: translateY(-50%);
+      height: 25px;
+      width: 25px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--sidebar-color);
+    }
 
-      input[type = "submit"]{
-        background-color: var(--primary-color);
-        color: var(--sidebar-color);
-      }
+    .sidebar li {
+      height: 50px;
+      /* background-color: red; */
+      margin-top: 10px;
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
 
-      .sidebar.close li input[type = "submit"]{
-        display: none;
-      }
+    .sidebar li .icon {
+      min-width: 40px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      .content {
-        margin-right: 0;
-        padding: 20px;
-      }
+    .sidebar li .icon,
+    .sidebar li .text {
+      color: var(--text-color);
+    }
 
-      /* Checkboxes container styles */
-      .checkbox-container {
-        position: absolute;
-        top: 15%;
-        left: 30px;
-        z-index: 1;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-      }
+    .sidebar.close .text {
+      opacity: 0;
+    }
 
-      .checkbox-container label {
-        display: block;
-        margin-bottom: 10px;
-        font-size: 16px;
-        color: #333;
-      }
+    .sidebar li a {
+      text-decoration: none;
+      height: 100%;
+      align-items: center;
+      display: flex;
+    }
 
-      /* Map container styles */
-      .map-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
-      }
+    .sidebar .search-box {
+      background-color: var(--primary-color-light);
+      margin-right: 10px;
+    }
 
-      .map {
-        width: 100%;
-        height: 90%;
-      }
+    .search-box input {
+      height: 100%;
+      width: 100%;
+      background: var(--primary-color-light);
+      outline: none;
+      border: none;
+      border-radius: 10px;
+    }
 
-      /* Close button hover effect */
-      .closebtn:hover {
-        color: #ccc;
-      }
+    .sidebar .text-area {
+      height: 100%;
+      width: 96%;
+      background: var(--primary-color-light);
+      outline: none;
+      border: none;
+      margin-top: 10px;
+      padding: 15px 15px;
+      font-size: 11.5px;
+      font-weight: 400;
+      height: auto;
+      resize: none;
+      /* Disable textarea resizing */
+      overflow: auto;
+      /* Add scrollbar if content exceeds textarea size */
+    }
 
-    </style>
-  </head>
-  <body>
-    <!-- Sidebar -->
-    <nav id="mySidebar" class="sidebar">
-      <header>
-        <div class="image-text">
-          <span class="image">
-            <img src="{% static 'logo.jpg' %}" alt="logo" />
-          </span>
+    .sidebar.close .text-area {
+      display: none;
+    }
 
-          <div class="text header-text">
-            <span class="name">Add Land</span>
-            <span class="profession">Ownership Data</span>
-          </div>
-        </div>
+    .search-box input::placeholder {
+      font-size: 11.5px;
+      font-weight: 400;
+    }
 
-        <i class="bx bx-chevron-left toggle"></i>
-      </header>
+    .search-box span {
+      font-size: 11.5px;
+      font-weight: 400;
+      opacity: 0.8;
+      width: 60%;
+    }
 
-      <div class="menu-bar">
-        <div class="menu">
-          <form id="myForm" method="post" action="{% url 'land_management_data' %}">
-  {% csrf_token %}
-  <ul class="menu-items">
-    <li class="search-box">
-      <i class="bx bx-registered icon"></i>
-      <input type="text" name="registration_authority_court" placeholder="Registration Authority Court" value="{{ registration_authority_court }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-time icon"></i>
-      <input type="text" name="registration_authority_date" placeholder="Registration Authority Date" value="{{ registration_authority_date }}" />
-    </li>
-      <textarea class="text-area" rows="6" name="registration_authority_decision" placeholder="Registration Authority Decision" ></textarea>  
-    <li class="search-box">
-      <i class="bx bx-user-pin icon"></i>
-      <input type="text" name="name" placeholder="Name" value="{{ name }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-id-card icon"></i>
-      <input type="number" name="id_number" placeholder="ID Number" value="{{ id_number }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-discount icon"></i>
-      <input type="text" name="ownership_percentage" placeholder="Ownership Percentage" value="{{ ownership_percentage }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bx-id-card icon"></i>
-      <input type="text" name="unique_id" placeholder="Unique ID" value="{{ unique_id }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bx-current-location icon"></i>
-      <input type="text" name="area_deed" placeholder="Area Deed" value="{{ area_deed }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bx-question-mark icon"></i>
-      <input type="text" name="area_survey" placeholder="Area Survey" value="{{ area_survey }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bx-current-location icon"></i>
-      <input type="text" name="coordinate" placeholder="Coordinate" value="{{ coordinate }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-city icon"></i>
-      <input type="text" name="city" placeholder="City" value="{{ city }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-tree-alt icon"></i>
-      <input type="text" name="hay" placeholder="Hay" value="{{ hay }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-discount icon"></i>
-      <input type="text" name="subdivision_number" placeholder="Subdivision Number" value="{{ subdivision_number }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-building-house icon"></i>
-      <input type="text" name="neighborhood" placeholder="Neighborhood" value="{{ neighborhood }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bx-target-lock icon"></i>
-      <input type="text" name="purpose" placeholder="Purpose" value="{{ purpose }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-bank icon"></i>
-      <input type="text" name="type_of_transaction" placeholder="Type Of Transaction" value="{{ type_of_transaction }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-bank icon"></i>
-      <span class="">Ownership transfer</span>
-      <input type="checkbox" name="ownership_transfer" placeholder="Ownership transfer" value="{{ ownership_transfer }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-bank icon"></i>
-      <span class="">Merge land parcels</span>
-      <input type="checkbox" name="merge_land_parcels" placeholder="Merge land parcels" value="{{ merge_land_parcels }}" />
-    </li>
-    <li class="search-box">
-      <i class="bx bxs-bank icon"></i>
-      <span class="">Split land parcel</span>
-      <input type="checkbox" name="split_land_parcel" placeholder="Split land parcel" value="{{ split_land_parcel }}" />
-    </li>
-
-    
-  <!-- Add other form fields here if needed -->
-</form>
-        </div>
-        
-      </div>
-      <li class="search-box">
-        <input type="submit" id="submitButton"></input>
-      </li>
-    </nav>
-    
-        <!-- Page content -->
-        <div class="content">
-        
-          <!-- Checkboxes container -->
-          <div class="checkbox-container">
-            <label>
-              <input type="checkbox" name="checkbox1" value="value1" /> Street
-              Lights
-            </label>
-            <label>
-              <input type="checkbox" name="checkbox2" value="value2" /> Land
-              Location
-            </label>
-          </div>
-    
-          <!-- Render the map content if available -->
-          <div class="map-container">{% if map %} {{ map|safe }} {% endif %}</div>
-        </div>
+    .search-box input[type='checkbox'] {
+      height: 40%;
+      width: 40%;
+    }
 
 
-    <script>
-      const body = document.querySelector("body"),
-      sidebar = body.querySelector('.sidebar'),
-      toggle = body.querySelector('.toggle');
 
-      toggle.addEventListener("click", () => {
-        sidebar.classList.toggle("close");
-      });
+    .menu-bar {
+      height: 90%;
+      margin-top: 10px;
+      overflow-y: auto;
+    }
 
-      function submitForm() {
-    document.getElementById("myForm").submit();
+    .sidebar.close .menu-bar {
+      overflow: hidden;
+    }
+
+    .menu-bar .mode {
+      background: var(--primary-color-light);
+    }
+
+    .sidebar.close .menu-bar {
+      height: 100%;
+    }
+
+    .menu-bar .mode .moon-sun {
+      height: 50px;
+      width: 60px;
+      display: flex;
+      align-items: center;
+    }
+
+    .menu-bar .mode i {
+      position: absolute;
+    }
+
+
+    .menu-bar .mode i.sun {
+      opacity: 0;
+    }
+
+    .menu-bar .mode .toggle-switch {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-width: 60px;
+      cursor: pointer;
+    }
+
+    .toggle-switch .switch {
+      position: relative;
+      height: 22px;
+      width: 44px;
+      background: var(--toggle-color);
+
+    }
+
+    .switch::before {
+      content: '';
+      position: absolute;
+      height: 15px;
+      width: 15px;
+      background: var(--sidebar-color);
+      border-radius: 50%;
+      top: 50%;
+      left: 50px;
+      transform: translateY(-50%);
+    }
+
+
+    input[type="submit"] {
+      background-color: var(--primary-color);
+      color: var(--sidebar-color);
+    }
+
+    .sidebar.close li input[type="submit"] {
+      display: none;
+    }
+
+    .content {
+      margin-right: 0;
+      padding: 20px;
+    }
+
+    .search-box.owner-controls button {
+    height: 100%; /* Set height to full */
+    width: 50%; /* Set width to 50% */
+    outline: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 30px;
   }
 
-  // Add event listener to the submit button
-  document.getElementById("submitButton").addEventListener("click", submitForm);
+  .search-box.owner-controls button:nth-child(1) {
+    background-color: green; /* Green background for + button */
+  }
+
+  .search-box.owner-controls button:nth-child(2) {
+    background-color: red; /* Red background for - button */
+  }
+
+    /* Checkboxes container styles */
+    .checkbox-container {
+      position: absolute;
+      top: 15%;
+      left: 30px;
+      z-index: 1;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .checkbox-container label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Map container styles */
+    .map-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .map {
+      width: 100%;
+      height: 90%;
+    }
+
+    /* Close button hover effect */
+    .closebtn:hover {
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <nav id="mySidebar" class="sidebar">
+    <header>
+      <div class="image-text">
+        <span class="image">
+          <img src="{% static 'logo.jpg' %}" alt="logo" />
+        </span>
+
+        <div class="text header-text">
+          <span class="name">Add Land</span>
+          <span class="profession">Ownership Data</span>
+        </div>
+      </div>
+
+      <i class="bx bx-chevron-left toggle"></i>
+    </header>
+
+    <div class="menu-bar">
+      <div class="menu">
+        <form id="myForm" method="post" action="{% url 'land_management_data' %}">
+          {% csrf_token %}
+          <ul class="menu-items">
+
+            <li class="search-box">
+              <i class="bx bx-registered icon"></i>
+              <input type="text" name="registration_authority_court" placeholder="Registration Authority Court"
+                value="{{ registration_authority_court }}" />
+            </li>
+
+            <li class="search-box">
+              <i class="bx bxs-time icon"></i>
+              <input type="date" name="registration_authority_date" placeholder="Registration Authority Date"
+                value="{{ registration_authority_date }}" />
+            </li>
+            <textarea class="text-area" rows="6" name="registration_authority_decision"
+              placeholder="Registration Authority Decision"></textarea>
+
+            <li class="search-box" style="background-color: #ffcf40; border-radius: 10px;">
+              <i class="bx bx-user-pin icon" style="color: black;"></i>
+              <input style="border-top-left-radius:0; border-bottom-left-radius: 11px;" type="submit"
+                name="confirm_decision" value="Confirm Decision">
+            </li>
+
+            <li class="search-box">
+              <i class="bx bx-user-pin icon"></i>
+              <input type="text" name="name" placeholder="Name" value="{{ name }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-id-card icon"></i>
+              <input type="text" name="id_number" placeholder="ID Number" value="{{ id_number }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-discount icon"></i>
+              <input type="number" name="ownership_percentage" placeholder="Ownership Percentage"
+                value="{{ ownership_percentage }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bx-id-card icon"></i>
+              <input type="text" name="unique_id" placeholder="Unique ID" value="{{ unique_id }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bx-current-location icon"></i>
+              <input type="text" name="area_deed" placeholder="Area Deed" value="{{ area_deed }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bx-question-mark icon"></i>
+              <input type="text" name="area_survey" placeholder="Area Survey" value="{{ area_survey }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bx-current-location icon"></i>
+              <input type="text" name="coordinate" placeholder="Coordinate" value="{{ coordinate }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-city icon"></i>
+              <input type="text" name="city" placeholder="City" value="{{ city }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-tree-alt icon"></i>
+              <input type="text" name="hay" placeholder="Hay" value="{{ hay }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-discount icon"></i>
+              <input type="text" name="subdivision_number" placeholder="Subdivision Number"
+                value="{{ subdivision_number }}" />
+            </li>
+
+            <li class="search-box">
+              <i class="bx bxs-building-house icon"></i>
+              <input type="text" name="neighborhood" placeholder="Neighborhood" value="{{ neighborhood }}" />
+            </li>
+
+            <li class="search-box" style="background-color: #ffcf40; border-radius: 10px;">
+              <i class="bx bx-user-pin icon" style="color: black;"></i>
+              <input style="border-top-left-radius:0; border-bottom-left-radius: 11px;" type="submit"
+                name="confirm_above" value="Confirm Above">
+            </li>
+
+            <ul id="owner-list">
+              {% for owner in owners %}
+              <li class="search-box owner-field" data-counter="{{ forloop.counter }}">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="Name - {{ forloop.counter }}" type="text" name="owner_name[]" value="{{ owner.name }}" />
+              </li>
+              <li class="search-box owner-field" data-counter="{{ forloop.counter }}">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="Unique ID - NIC - {{ forloop.counter }}" type="text" name="owner_id[]" value="{{ owner.id }}" />
+              </li>
+              <li class="search-box owner-field" data-counter="{{ forloop.counter }}">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="% of ownership - {{ forloop.counter }}" type="number" name="owner_percentage[]" value="{{ owner.percentage }}" />
+              </li>
+              {% endfor %}
+          </ul>
+      
+          <!-- Template for adding new owner fields -->
+          <template id="owner-template">
+              <li class="search-box owner-field">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="Name" type="text" name="owner_name[]" />
+              </li>
+              <li class="search-box owner-field">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="Unique ID - NIC" type="text" name="owner_id[]" />
+              </li>
+              <li class="search-box owner-field">
+                  <i class="bx bxs-building-house icon"></i>
+                  <input placeholder="% of ownership" type="number" name="owner_percentage[]" />
+              </li>
+          </template>
+      
+          <!-- Add and remove buttons -->
+          <li class="search-box owner-controls">
+              <button type="button" id="add-owner-btn">+</button>
+              <button type="button" id="remove-owner-btn">-</button>
+          </li>
+
+            <!-- Confirm Owner button -->
+            <li class="search-box" style="background-color: #ffcf40; border-radius: 10px;">
+              <i class="bx bx-user-pin icon" style="color: black;"></i>
+              <input style="border-top-left-radius:0; border-bottom-left-radius: 11px;" type="submit" name="owners"
+                value="Confirm Owner">
+            </li>
+
+
+            <li class="search-box">
+              <i class="bx bx-target-lock icon"></i>
+              <input type="text" name="purpose" placeholder="Purpose" value="{{ purpose }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-bank icon"></i>
+              <input type="text" name="type_of_transaction" placeholder="Type Of Transaction"
+                value="{{ type_of_transaction }}" />
+            </li>
+            <li class="search-box">
+              <i class="bx bxs-bank icon"></i>
+              <span class="">Ownership transfer</span>
+              <input type="checkbox" name="ownership_transfer" placeholder="Ownership transfer" {% if ownership_transfer %}checked{% endif %}>
+            </li>
+            <li class="search-box" type="non-visible">
+              <i class="bx bxs-bank icon"></i>
+              <span class="">Merge land parcels</span>
+              <input type="checkbox" name="merge_land_parcels" placeholder="Merge land parcels" {% if merge_land_parcels %}checked{% endif %}>
+            </li>
+            <li class="search-box" type="non-visible">
+              <i class="bx bxs-bank icon"></i>
+              <span class="">Split land parcel</span>
+              <input type="checkbox" name="split_land_parcel" placeholder="Split land parcel" {% if split_land_parcel %}checked{% endif %}>
+            </li>
+            <li class="search-box" style="background-color: #ffcf40; border-radius: 10px;">
+              <i class="bx bx-user-pin icon" style="color: black;"></i>
+              <input style="border-top-left-radius:0; border-bottom-left-radius: 11px;" type="submit"
+                name="confirm_transfer" value="Confirm Transfer">
+            </li>
+
+            <!-- Add other form fields here if needed -->
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page content -->
+  <div class="content">
+
+    <!-- Checkboxes container -->
+    <div class="checkbox-container">
+      <label>
+        <input type="checkbox" name="checkbox1" value="value1" /> Street
+        Lights
+      </label>
+      <label>
+        <input type="checkbox" name="checkbox2" value="value2" /> Land
+        Location
+      </label>
+    </div>
+
+    <!-- Render the map content if available -->
+    <div class="map-container">{% if map %} {{ map|safe }} {% endif %}</div>
+  </div>
+
+
+  <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const body = document.querySelector("body"),
+        sidebar = body.querySelector('.sidebar'),
+        toggle = body.querySelector('.toggle');
+
+        toggle.addEventListener("click", () => {
+        sidebar.classList.toggle("close");
+        });
+            // Function to add a new owner field
+            function addOwnerField() {
+                const ownerFields = document.querySelectorAll('.owner-field');
+                const counter = ownerFields.length > 0 ? parseInt(ownerFields[ownerFields.length - 1].getAttribute('data-counter')) + 1 : 1;
+
+                const template = document.getElementById('owner-template');
+                const clone = template.content.cloneNode(true);
+
+                // Set placeholders for inputs
+                const placeholders = [
+                    `Name - ${counter}`,
+                    `Unique ID - NIC - ${counter}`,
+                    `% of ownership - ${counter}`
+                ];
+
+                // Set placeholders for name, ID, and percentage inputs
+                const [nameInput, idInput, percentageInput] = clone.querySelectorAll('input[name^="owner_"]');
+                [nameInput.placeholder, idInput.placeholder, percentageInput.placeholder] = placeholders;
+
+                // Set data-counter attribute
+                clone.querySelectorAll('.owner-field').forEach(field => {
+                    field.setAttribute('data-counter', counter);
+                });
+
+                // Append cloned template to owner list
+                document.getElementById('owner-list').appendChild(clone);
+            }
+
+            // Function to remove owner fields
+            function removeOwnerField(event) {
+                event.preventDefault();
+                const ownerList = document.getElementById('owner-list');
+                const ownerFields = ownerList.getElementsByClassName('owner-field');
+
+                // Ensure there are more than 3 owner fields before removing
+                if (ownerFields.length > 3) {
+                    ownerList.removeChild(ownerFields[ownerFields.length - 1]);
+                }
+            }
+
+            // Add event listeners
+            document.getElementById('add-owner-btn').addEventListener('click', addOwnerField);
+            document.getElementById('remove-owner-btn').addEventListener('click', removeOwnerField);
+          })
     </script>
-  </body>
+</body>
 </html>
-
-
-<!-- Add Land Ownership Data
-Registration authority court: 
-
-Registration authority date: 
-
-Registration authority decision: 
-
-Name: 
-
-Id number: 
-
-Ownership percentage: 
-
-Unique id: 
-
-Area deed: 
-
-Area survey: 
-
-Coordinate: 
-
-City: 
-
-Hay: 
-
-Subdivision number: 
-
-Neighborhood: 
-
-Purpose: 
-
-Type of transaction: 
-
-Ownership transfer: 
-
-Merge land parcels: 
-
-Split land parcel: 
-
-Hash reference:  -->

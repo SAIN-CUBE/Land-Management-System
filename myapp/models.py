@@ -46,5 +46,4 @@ class LandOwnershipData(models.Model):
     registration_authority_court = models.CharField(max_length=100)
     registration_authority_date = models.DateField()
     registration_authority_decision = models.TextField()
-    owners = models.ManyToManyField(Owner)
     transactions = models.ManyToManyField(Transaction)
