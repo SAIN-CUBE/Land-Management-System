@@ -1,9 +1,14 @@
 from django.shortcuts import render, redirect
+<<<<<<< HEAD
 from folium import Map, Marker, FeatureGroup, LayerControl
 from myapp.forms import ConfirmAboveForm, ConfirmDecisionForm, ConfirmTransferForm, OwnerForm
 from .models import MyStreetlightModel, MyLandLocationModel, Owner
 from django.http import JsonResponse
 from django.urls import reverse
+=======
+from .forms import  LandForm
+from folium import Map
+>>>>>>> f9198d5612d664adc917a36fb4485d9478306503
 
 
 def home(request):
@@ -31,6 +36,7 @@ def land_management_data(request):
 
 
     if request.method == 'POST':
+<<<<<<< HEAD
             if 'confirm_decision' in request.POST:
                 # Process data for confirm decision button
                 form = ConfirmDecisionForm(request.POST)
@@ -112,6 +118,16 @@ def land_management_data(request):
                     merge_land_parcels = request.POST.get('merge_land_parcels') == 'on'
                     split_land_parcel = request.POST.get('split_land_parcel') == 'on'
                     # Process and save the data for confirm transfer
+=======
+        land_form = LandForm(request.POST)
+        if land_form.is_valid():
+            land_form.save()
+            # Redirect to the success page upon successful form submission
+            return redirect('success')
+
+    else:
+        land_form = LandForm()
+>>>>>>> f9198d5612d664adc917a36fb4485d9478306503
 
                     print("Purpose:", purpose)
                     print("Type of Transaction:", type_of_transaction)
@@ -129,6 +145,10 @@ def land_management_data(request):
                         
     # Render the land management data page with the map
     return render(request, 'land_management_data.html', {
+<<<<<<< HEAD
+=======
+        'land_form': land_form,
+>>>>>>> f9198d5612d664adc917a36fb4485d9478306503
         'map': m._repr_html_() if m else None,
         'owners': owners,
         'owner_form': owner_form,  # Pass the owner form to the template context

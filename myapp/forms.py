@@ -1,6 +1,7 @@
 # forms.py
 
 from django import forms
+<<<<<<< HEAD
 
 class ConfirmDecisionForm(forms.Form):
     registration_authority_court = forms.CharField(max_length=100)
@@ -33,3 +34,14 @@ class OwnerForm(forms.Form):
     owner_name = forms.CharField(max_length=100)
     owner_id = forms.CharField(max_length=20)
     owner_percentage = forms.IntegerField()
+=======
+from .models import Land
+
+class LandForm(forms.ModelForm):
+    class Meta:
+        model = Land
+        fields = ['name', 'id_number', 'ownership_percentage','unique_id', 'area_deed', 
+                  'area_survey', 'coordinate', 'city', 'hay', 'subdivision_number', 'neighborhood',
+                  'purpose', 'type_of_transaction', 'ownership_transfer', 'merge_land_parcels', 'split_land_parcel', 'hash_reference',
+                  'registration_authority_court', 'registration_authority_date', 'registration_authority_decision']
+>>>>>>> f9198d5612d664adc917a36fb4485d9478306503
